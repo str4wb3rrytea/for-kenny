@@ -3,9 +3,10 @@
   "name": "A Reminder for Kenny!",
   "icons": [
     {
-      "src": "icon.png",
+      "src": "src/assets/visuals/icon.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ],
   "start_url": ".",

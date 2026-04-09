@@ -2,49 +2,89 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>A Reminder for Kenny</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="assets/visuals/icon.png">
+
+    <style>
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background: #000; overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .scene {
+            position: absolute;
+            width: 100vw; height: 100vh;
+            object-fit: cover;
+        }
+        .hidden { display: none; }
+    </style>
 </head>
-<style>
-    .scene {
-        position: absolute;
-        width: 100vw; height: 100vh;
-        object-fit: cover;
-        transition: opacity 0.8s ease-in-out;
-    }
-    .hidden { opacity: 0; pointer-events: none; }
-</style>
 <body>
-    <img id="intro" src="loading.gif" class="scene">
-    <video id="writingVideo" class="scene hidden" playsinline></video>
-    <img id="final" src="finished.gif" class="scene hidden">
+    <img id="intro" src="assets/visuals/loading.gif" class="scene">
+
+    <video id="writingVideo" class="scene hidden" playsinline muted preload="auto"></video>
+
+    <img id="final" src="assets/visuals/finished.gif" class="scene hidden">
 
     <script>
-        const songs = ['assets/audio/city_of_stars.mp3', 'assets/audio/mei_ehara.mp3', 'assets/audio/xu_ni.mp3'];
+        const songs = [
+            'assets/audio/city_of_stars.mp3',
+            'assets/audio/mei_ehara.mp3',
+            'assets/audio/xu_ni.mp3'
+        ];
 
         async function startExperience() {
-            // Randomize audio
+            // 1. Audio Randomizer
             const audio = new Audio(songs[Math.floor(Math.random() * songs.length)]);
-            await audio.play();
 
-            // Fade Logic
+            // 2. Immediate Logic Swap
             const intro = document.getElementById('intro');
             const video = document.getElementById('writingVideo');
+            const final = document.getElementById('final');
 
+            // Set video source and play
+            video.src = 'assets/visuals/writing.mp4';
+
+            // Swap visuals instantly
             intro.classList.add('hidden');
-            video.src = 'writing.mp4';
             video.classList.remove('hidden');
+
+            // Start both audio and video
+            audio.play();
             video.play();
 
+            // 3. Final Transition
             video.onended = () => {
                 video.classList.add('hidden');
-                document.getElementById('final').classList.remove('hidden');
+                final.classList.remove('hidden');
             };
         }
 
-        document.body.onclick = () => {
+        // Trigger on tap
+
+        document.body.onclick = (event) => {
+            // 1. Prevent trigger if the experience already started
             if (document.getElementById('intro').classList.contains('hidden')) return;
-            startExperience();
+
+            //Get click coordinates and screen dimensions
+            const x = event.clientX;
+            const y = event.clientY;
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            // Kenny presses bottom-right corner
+            const isInWidth = x > (width * 0.7);
+            const isInHeight = y > (height * 0.7);
+
+            if (isInWidth && isInHeight) {
+                startExperience();
+            } else {
+                console.log("Clicked outside the trigger area");
+            }
         };
     </script>
 </body>
