@@ -105,6 +105,8 @@
         document.addEventListener("visibilitychange", () => {
             if (document.hidden && currentAudio) {
                 currentAudio.pause();
+                currentAudio = null;
+                location.reload();
             }
         });
     </script>
