@@ -64,13 +64,13 @@
 
             // Set video source and play
             video.currentTime = 0;
-
-            // Swap visuals instantly
-            intro.classList.add('hidden');
-            video.classList.remove('hidden');
-
-            // Start video
             video.play();
+
+            setTimeout(() => {
+                intro.classList.add('hidden');
+                video.classList.remove('hidden');
+            }, 100);
+
 
             // 3. Final Transition
             video.onended = () => {
