@@ -7,7 +7,7 @@
 
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="assets/visuals/icon.png">
+    <link rel="apple-touch-icon" href="src/assets/visuals/icon.png">
 
     <style>
         body, html {
@@ -24,17 +24,17 @@
     </style>
 </head>
 <body>
-    <img id="intro" src="assets/visuals/loading.gif" class="scene">
+    <img id="intro" src="src/assets/visuals/loading.gif" class="scene">
 
     <video id="writingVideo" class="scene hidden" playsinline muted preload="auto"></video>
 
-    <img id="final" src="assets/visuals/finished.gif" class="scene hidden">
+    <img id="final" src="src/assets/visuals/finished.gif" class="scene hidden">
 
     <script>
         const songs = [
-            'assets/audio/city_of_stars.mp3',
-            'assets/audio/mei_ehara.mp3',
-            'assets/audio/xu_ni.mp3'
+            'src/assets/audio/city_of_stars.mp3',
+            'src/assets/audio/mei_ehara.mp3',
+            'src/assets/audio/xu_ni.mp3'
         ];
 
         async function startExperience() {
@@ -47,7 +47,7 @@
             const final = document.getElementById('final');
 
             // Set video source and play
-            video.src = 'assets/visuals/writing.mp4';
+            video.src = 'src/assets/visuals/writing.mp4';
 
             // Swap visuals instantly
             intro.classList.add('hidden');
