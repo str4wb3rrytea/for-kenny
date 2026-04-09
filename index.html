@@ -1,123 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>A Reminder for Kenny</title>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>A Reminder for Kenny</title>
 
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="src/assets/visuals/icon.png">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <link rel="apple-touch-icon" href="src/assets/visuals/icon.png">
 
-    <style>
-        body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
-            background: #000; overflow: hidden;
-            display: flex; justify-content: center; align-items: center;
-        }
-        .scene {
-            position: absolute;
-            width: 100vw; height: 100vh;
-            object-fit: cover;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            touch-action: manipulation;
-        }
-        .hidden { display: none; }
-    </style>
-</head>
-<body>
-    <img id="intro" src="src/assets/visuals/loading.gif" class="scene">
+        <style>
+            body, html {
+                margin: 0; padding: 0; width: 100%; height: 100%;
+                background: #000; overflow: hidden;
+                display: flex; justify-content: center; align-items: center;
+            }
+            .scene {
+                position: absolute;
+                width: 100vw; height: 100vh;
+                object-fit: cover;
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                touch-action: manipulation;
+            }
+            .hidden { display: none; }
+        </style>
+    </head>
+    <body>
+        <img id="intro" src="src/assets/visuals/loading.gif" class="scene">
 
-    <video id="writingVideo" class="scene hidden" playsinline muted preload="auto">
-        <source src="src/assets/visuals/writing.mp4" type="video/mp4">
-    </video>
+        <video id="writingVideo" class="scene hidden" playsinline muted preload="auto">
+            <source src="src/assets/visuals/writing.mp4" type="video/mp4">
+        </video>
 
-    <img id="final" src="src/assets/visuals/finished.gif" class="scene hidden">
+        <img id="final" src="src/assets/visuals/finished.gif" class="scene hidden">
 
-    <script>
-        let currentAudio = null;
-        let lastTrack = null;
-        const songs = [
-            'src/assets/audio/city_of_stars.mp3',
-            'src/assets/audio/mei_ehara.mp3',
-            'src/assets/audio/xu_ni.mp3',
-            'src/assets/audio/paper_moon.mp3',
-            'src/assets/audio/moon_river.mp3',
-            'src/assets/audio/waltz_for_hulot.mp3'
-        ];
+        <script>
+            let currentAudio = null;
+            let lastTrack = null;
+            const songs = [
+                'src/assets/audio/city_of_stars.mp3',
+                'src/assets/audio/mei_ehara.mp3',
+                'src/assets/audio/xu_ni.mp3',
+                'src/assets/audio/paper_moon.mp3',
+                'src/assets/audio/moon_river.mp3',
+                'src/assets/audio/waltz_for_hulot.mp3',
+                'src/assets/audio/him_and_her.mp3',
+                'src/assets/audio/if_it_lasts.mp3',
+                'src/assets/audio/fly.mp3',
+                'src/assets/audio/night_wind.mp3',
+                'src/assets/audio/before_spring_ends.mp3',
+                'src/assets/audio/last_night_on_earth.mp3'
+            ];
 
-        function playRandomSong() {
-            let track;
-            do {
-                track = songs[Math.floor(Math.random() * songs.length)];
-            } while (track === lastTrack && songs.length > 1);
+            function playRandomSong() {
+                let track;
+                do {
+                    track = songs[Math.floor(Math.random() * songs.length)];
+                } while (track === lastTrack && songs.length > 1);
 
-            lastTrack = track;
-            currentAudio = new Audio(track);
-            currentAudio.play();
+                lastTrack = track;
+                currentAudio = new Audio(track);
+                currentAudio.play();
 
-            // The Infinite Loop: plays another song when this one finishes
-            currentAudio.onended = () => {
+                // The Infinite Loop: plays another song when this one finishes
+                currentAudio.onended = () => {
+                    playRandomSong();
+                };
+            }
+
+            async function startExperience() {
+                // 2. Immediate Logic Swap
+                const intro = document.getElementById('intro');
+                const video = document.getElementById('writingVideo');
+                const final = document.getElementById('final');
+
                 playRandomSong();
-            };
-        }
 
-        async function startExperience() {
-            // 2. Immediate Logic Swap
-            const intro = document.getElementById('intro');
-            const video = document.getElementById('writingVideo');
-            const final = document.getElementById('final');
+                // Set video source and play
+                video.currentTime = 0;
+                video.play();
 
-            playRandomSong();
-
-            // Set video source and play
-            video.currentTime = 0;
-            video.play();
-
-            setTimeout(() => {
-                intro.classList.add('hidden');
-                video.classList.remove('hidden');
-            }, 100);
+                setTimeout(() => {
+                    intro.classList.add('hidden');
+                    video.classList.remove('hidden');
+                }, 100);
 
 
-            // 3. Final Transition
-            video.onended = () => {
-                video.classList.add('hidden');
-                final.classList.remove('hidden');
-            };
-        }
-
-        // Trigger on tap
-
-        document.body.onclick = (event) => {
-            // 1. Prevent trigger if the experience already started
-            if (document.getElementById('intro').classList.contains('hidden')) return;
-
-            //Get click coordinates and screen dimensions
-            const x = event.clientX;
-            const y = event.clientY;
-            const width = window.innerWidth;
-            const height = window.innerHeight;
-
-            // Kenny presses bottom-right corner
-            const isInWidth = x > (width * 0.7);
-            const isInHeight = y > (height * 0.7);
-
-            if (isInWidth && isInHeight) {
-                startExperience();
-            } else {
-                console.log("Clicked outside the trigger area");
+                // 3. Final Transition
+                video.onended = () => {
+                    video.classList.add('hidden');
+                    final.classList.remove('hidden');
+                };
             }
-        };
-        // Stops the music if the tab is hidden (swiped away or phone locked)
-        document.addEventListener("visibilitychange", () => {
-            if (document.hidden && currentAudio) {
-                currentAudio.pause();
-                currentAudio = null;
-                location.reload();
-            }
-        });
-    </script>
-</body>
+
+            // Trigger on tap
+
+            document.body.onclick = (event) => {
+                // 1. Prevent trigger if the experience already started
+                if (document.getElementById('intro').classList.contains('hidden')) return;
+
+                //Get click coordinates and screen dimensions
+                const x = event.clientX;
+                const y = event.clientY;
+                const width = window.innerWidth;
+                const height = window.innerHeight;
+
+                // Kenny presses bottom-right corner
+                const isInWidth = x > (width * 0.7);
+                const isInHeight = y > (height * 0.7);
+
+                if (isInWidth && isInHeight) {
+                    startExperience();
+                } else {
+                    console.log("Clicked outside the trigger area");
+                }
+            };
+            // Stops the music if the tab is hidden (swiped away or phone locked)
+            document.addEventListener("visibilitychange", () => {
+                if (document.hidden && currentAudio) {
+                    currentAudio.pause();
+                    currentAudio = null;
+                    location.reload();
+                }
+            });
+        </script>
+    </body>
 </html>
