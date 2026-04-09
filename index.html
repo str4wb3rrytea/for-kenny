@@ -37,14 +37,23 @@
 
     <script>
         let currentAudio = null;
+        let lastTrack = null;
         const songs = [
             'src/assets/audio/city_of_stars.mp3',
             'src/assets/audio/mei_ehara.mp3',
-            'src/assets/audio/xu_ni.mp3'
+            'src/assets/audio/xu_ni.mp3',
+            'src/assets/audio/paper_moon.mp3',
+            'src/assets/audio/moon_river.mp3',
+            'src/assets/audio/waltz_for_hulot.mp3'
         ];
 
         function playRandomSong() {
-            const track = songs[Math.floor(Math.random() * songs.length)];
+            let track;
+            do {
+                track = songs[Math.floor(Math.random() * songs.length)];
+            } while (track === lastTrack && songs.length > 1);
+
+            lastTrack = track;
             currentAudio = new Audio(track);
             currentAudio.play();
 
