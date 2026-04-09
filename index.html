@@ -19,6 +19,9 @@
             position: absolute;
             width: 100vw; height: 100vh;
             object-fit: cover;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
         }
         .hidden { display: none; }
     </style>
@@ -26,35 +29,47 @@
 <body>
     <img id="intro" src="src/assets/visuals/loading.gif" class="scene">
 
-    <video id="writingVideo" class="scene hidden" playsinline muted preload="auto"></video>
+    <video id="writingVideo" class="scene hidden" playsinline muted preload="auto">
+        <source src="src/assets/visuals/writing.mp4" type="video/mp4">
+    </video>
 
     <img id="final" src="src/assets/visuals/finished.gif" class="scene hidden">
 
     <script>
+        let currentAudio = null;
         const songs = [
             'src/assets/audio/city_of_stars.mp3',
             'src/assets/audio/mei_ehara.mp3',
             'src/assets/audio/xu_ni.mp3'
         ];
 
-        async function startExperience() {
-            // 1. Audio Randomizer
-            const audio = new Audio(songs[Math.floor(Math.random() * songs.length)]);
+        function playRandomSong() {
+            const track = songs[Math.floor(Math.random() * songs.length)];
+            currentAudio = new Audio(track);
+            currentAudio.play();
 
+            // The Infinite Loop: plays another song when this one finishes
+            currentAudio.onended = () => {
+                playRandomSong();
+            };
+        }
+
+        async function startExperience() {
             // 2. Immediate Logic Swap
             const intro = document.getElementById('intro');
             const video = document.getElementById('writingVideo');
             const final = document.getElementById('final');
 
+            playRandomSong();
+
             // Set video source and play
-            video.src = 'src/assets/visuals/writing.mp4';
+            video.currentTime = 0;
 
             // Swap visuals instantly
             intro.classList.add('hidden');
             video.classList.remove('hidden');
 
-            // Start both audio and video
-            audio.play();
+            // Start video
             video.play();
 
             // 3. Final Transition
@@ -86,6 +101,12 @@
                 console.log("Clicked outside the trigger area");
             }
         };
+        // Stops the music if the tab is hidden (swiped away or phone locked)
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden && currentAudio) {
+                currentAudio.pause();
+            }
+        });
     </script>
 </body>
 </html>
