@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .scene {
+        position: absolute;
+        width: 100vw; height: 100vh;
+        object-fit: cover;
+        transition: opacity 0.8s ease-in-out;
+    }
+    .hidden { opacity: 0; pointer-events: none; }
+</style>
+<body>
+    <img id="intro" src="loading.gif" class="scene">
+    <video id="writingVideo" class="scene hidden" playsinline></video>
+    <img id="final" src="finished.gif" class="scene hidden">
+
+    <script>
+        const songs = ['assets/audio/city_of_stars.mp3', 'assets/audio/mei_ehara.mp3', 'assets/audio/xu_ni.mp3'];
+
+        async function startExperience() {
+            // Randomize audio
+            const audio = new Audio(songs[Math.floor(Math.random() * songs.length)]);
+            await audio.play();
+
+            // Fade Logic
+            const intro = document.getElementById('intro');
+            const video = document.getElementById('writingVideo');
+
+            intro.classList.add('hidden');
+            video.src = 'writing.mp4';
+            video.classList.remove('hidden');
+            video.play();
+
+            video.onended = () => {
+                video.classList.add('hidden');
+                document.getElementById('final').classList.remove('hidden');
+            };
+        }
+
+        document.body.onclick = () => {
+            if (document.getElementById('intro').classList.contains('hidden')) return;
+            startExperience();
+        };
+    </script>
+</body>
+</html>
